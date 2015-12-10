@@ -1,5 +1,5 @@
 # Dynamic DNS to use with your Plesk server
-Shell script to remotely update the A-record of a subdomain, managed by a Plesk server.
+Shell script to remotely update the A-record of a subdomain DNS entry, managed by a Plesk server.
 
 ##Installation:
 1. Create a subdomain in Plesk to use as your dynamic DNS hostname (no hosting required)

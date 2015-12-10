@@ -1,8 +1,8 @@
 #!/bin/bash
 #
 # Author: Daniel Kurdoghlian (daniel.k@pushingpixels.at)
-# https://github.com/derblub/dyndns
-
+# Upstream: https://github.com/derblub/dyndns
+# Version: 0.2
 
 # SETTINGS
 # -----------------------------------------------------------------------------
@@ -94,9 +94,22 @@ if [[ ${MY_IP} == ${LAST_SAVED_WAN_IP} && ${MY_IP} == ${CURRENT_DNS_IP} ]]; then
     exit 1
 fi
 
+# check if we really got an IP from $MY_IP
+if [[ -z ${MY_IP} ]]; then  # -z == zero-length string
+    # lets try again before we quit:
+    MY_IP=$(dig +short $DNS_RESOLVER)
+
+    if [[ -z ${MY_IP} ]]; then
+        # too bad - still no IP
+        echo "ERROR: \$MY_IP is unset or an empty string" | write_log
+        send_mail "update error" "$DATE ERROR: \$MY_IP is unset or an empty string"
+        exit 1
+    fi
+fi
+
 
 # get the row-id of the DNS A-record for $DOMAIN
-DNS_ID_VAL=$(ssh $REMOTEUSER@$REMOTEHOST mysql -e "\"SELECT id, val FROM $DNS_TABLE WHERE host = '$DOMAIN.' AND type = 'A';\"" | tr -d "| " | grep -v id)
+DNS_ID_VAL=$(ssh $REMOTEUSER@$REMOTEHOST mysql --batch --skip-column-names -e "\"SELECT id, val FROM $DNS_TABLE WHERE host = '$DOMAIN.' AND type = 'A';\"")
 
 if [[ ${DNS_ID_VAL} ]]; then
     # data found in table $DNS_TABLE
