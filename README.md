@@ -15,3 +15,10 @@ Shell script to remotely update the A-record of a subdomain DNS entry, managed b
 - create subdomain from script
 - make more things optional
 - ...
+
+---
+### Tested with:
+- Plesk 10
+- Plesk 11.5
+
+For any other version, first make sure the column exists and is in use by Plesk. To update your bind adresses, you'll also need the `dnsmng` tool by Plesk, alternativly you can update DNS cache yourself of course.
