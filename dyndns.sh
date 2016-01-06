@@ -132,7 +132,7 @@ if [[ ${DNS_ID_VAL} ]]; then
             echo $MY_IP | write_wan_ip  # write new ip to $LAST_WAN_IP
             echo "new IP: $MY_IP" | write_log
 
-            send_mail "new IP: $MY_IP" "$DATE new IP saved"  # send mail with new ip
+            send_mail "new IP: $MY_IP" "$DATE: new IP $MY_IP saved"  # send mail with new ip
 
         else
             echo "ERROR: update from $DNS_IP to $MY_IP failed" | write_log
