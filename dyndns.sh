@@ -90,7 +90,8 @@ CURRENT_DNS_IP=$(dig +short $DOMAIN)
 
 # compare 3rd-party ip to last-saved ip, cross check with saved dns
 if [[ ${MY_IP} == ${LAST_SAVED_WAN_IP} && ${MY_IP} == ${CURRENT_DNS_IP} ]]; then
-    echo $'all good, nothing to do here! \n\n[image of stickman with jetpack straped on, flying away]'
+    # no output if no errors
+    #echo $'all good, nothing to do here! \n\n[image of stickman with jetpack straped on, flying away]'
     exit 1
 fi
 
