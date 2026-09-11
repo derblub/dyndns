@@ -7,24 +7,22 @@
 # SETTINGS
 # -----------------------------------------------------------------------------
 
+
+
 # resolver is used to get your current wan-ip
-DNS_RESOLVER="myip.opendns.com @resolver1.opendns.com"
-DNS_TABLE="psa.dns_recs"               # dns records table of plesk
+# --- configuration -------------------------------------------------------
+# All settings live outside the repository: ~/.config/dyndns/config
+# (see config.example). Override the location with DYNDNS_CONFIG.
+CONFIG="${DYNDNS_CONFIG:-$HOME/.config/dyndns/config}"
+if [ -r "$CONFIG" ]; then
+    . "$CONFIG"
+else
+    echo "dyndns: configuration not found: $CONFIG (see config.example)" >&2
+    exit 1
+fi
 
-REMOTEUSER="dnsupdateuser"             # remote user
-REMOTEHOST="127.0.0.1"                 # remote host
 
-MAILTO=("your@mail.com")               # send notification mails to
-SMTPSERVER="host.com"                  # smtp host
-SMTPPORT="587"                         # smtp port
-SMTPFROM="from@mail.com"               # from-address
-SMTPUSER="user"                        # smtp user
-SMTPPASSWORD="topsecret"               # smtp password
 
-IDENTITY="/home/user/.ssh/id_rsa"      # ssh key to use
-DOMAIN="dyndns.domain.com"             # dns domain (must be created in plesk)
-LOG_FILE="/var/log/dyndns.log"         # log to this file
-LAST_WAN_IP="/home/user/.last_wan_ip"  # contains last saved wan-ip
 DATE=$(date "+%d-%m-%Y %T")            # date format for log
 
 # -----------------------------------------------------------------------------
@@ -32,20 +30,20 @@ DATE=$(date "+%d-%m-%Y %T")            # date format for log
 
 
 # add identity for keyless authentication
-eval $(ssh-agent) &>/dev/null
-ssh-add $IDENTITY &>/dev/null
+eval $(ssh-agent)
+ssh-add $IDENTITY
 
 touch $LAST_WAN_IP
 
 write_log(){
     while read text
-    do 
+    do
         # If log file is not defined, just echo the output
-        if [ "$LOG_FILE" == "" ]; then 
+        if [ "$LOG_FILE" == "" ]; then
             echo $DATE": $text"
         else
             touch $LOG_FILE
-            if [ ! -f $LOG_FILE ]; then 
+            if [ ! -f $LOG_FILE ]; then
                 echo "ERROR! Couldn't create $LOG_FILE"
                 exit 1
             fi
@@ -81,6 +79,17 @@ send_mail(){
 $body
 EOF
 }
+
+wget -q --tries=10 --timeout=20 --spider https://google.at
+if [[ $? -eq 0 ]]; then
+    #echo "Online"
+    :
+else
+    #wait some time..
+    sleep 30
+    #echo "Offline"
+    #exit 1
+fi
 
 
 MY_IP=$(dig +short $DNS_RESOLVER)

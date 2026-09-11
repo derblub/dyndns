@@ -1,3 +1,5 @@
+2026-09-11  configuration moved out of the script into ~/.config/dyndns/config (see config.example); no credentials in the repository; online check before running; ssh-agent output no longer hidden
+
 Please view this file on the master branch, on stable branches it's out of date.
 
 
