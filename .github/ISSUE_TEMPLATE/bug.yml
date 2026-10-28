@@ -1,0 +1,30 @@
+name: Bug
+description: The record was not updated, was updated wrongly, or the script stopped with an error.
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: The output of the run and the lines from LOG_FILE. Remove host names, addresses and anything else private.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+    validations:
+      required: true
+  - type: input
+    id: plesk
+    attributes:
+      label: Plesk version and server operating system
+      placeholder: Plesk Obsidian 18.0, Debian 12
+    validations:
+      required: true
+  - type: input
+    id: client
+    attributes:
+      label: Where the script runs
+      placeholder: Raspberry Pi OS 12, bash 5.2, s-nail 14.9

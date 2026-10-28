@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security issue
+    url: https://github.com/derblub/dyndns/security/advisories/new
+    about: Please report vulnerabilities privately.
+  - name: Infrastructure and deployment pipelines
+    url: https://pushingpixels.at/creates/devops-and-infra
+    about: By the author, Daniel Kurdoghlian (Pushing Pixels).

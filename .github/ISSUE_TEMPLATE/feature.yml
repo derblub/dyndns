@@ -1,0 +1,20 @@
+name: Feature request
+description: An idea for a setting, a check or another way to update the record.
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What were you trying to do when the script fell short?
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: Your idea
+      description: How would you like it to work?
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: What you do today instead
