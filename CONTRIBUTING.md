@@ -25,11 +25,14 @@ $ DYNDNS_CONFIG=/tmp/dyndns-test.conf ./dyndns.sh
 Before you open a pull request:
 
 ```console
-$ bash -n dyndns.sh
-$ shellcheck -x dyndns.sh
+$ bash -n dyndns.sh tests/test.sh
+$ shellcheck -x dyndns.sh tests/test.sh
+$ tests/test.sh
 ```
 
-CI runs the same two checks. `-x` lets ShellCheck read `config.example`, so a new setting belongs in that file too.
+CI runs the same checks. `-x` lets ShellCheck read `config.example`, so a new setting belongs in that file too.
+
+`tests/test.sh` needs no server: it runs `dyndns.sh` with stubs for `ssh`, `dig`, `mailx`, `wget` and `ssh-agent` in front of `PATH`, records every call, and checks what the script did in each case. A change in behaviour needs a case there.
 
 ## Where things live
 
@@ -37,6 +40,7 @@ CI runs the same two checks. `-x` lets ShellCheck read `config.example`, so a ne
 | --- | --- |
 | `dyndns.sh` | The script: finds the WAN IP, compares it with the last one and the DNS record, and updates the record in the Plesk database over SSH |
 | `config.example` | Every setting with an example value. Copy it to `~/.config/dyndns/config` |
+| `tests/test.sh` | Runs the script against stubs and checks each case: unchanged IP, update, failed update, no connection, no IP, and answers that are not an IPv4 address |
 
 ## Pull requests
 

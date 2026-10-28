@@ -13,6 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - run: bash -n dyndns.sh
+      - run: bash -n dyndns.sh tests/test.sh
       - run: shellcheck --version
-      - run: shellcheck -x dyndns.sh
+      - run: shellcheck -x dyndns.sh tests/test.sh
+      - run: tests/test.sh

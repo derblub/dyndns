@@ -25,6 +25,8 @@ DATE=$(date "+%d-%m-%Y %T")            # date format for log
 
 # add identity for keyless authentication (an empty IDENTITY adds the default keys)
 eval "$(ssh-agent)"
+# stop this agent again however the script ends, or every run leaves one behind
+trap 'ssh-agent -k > /dev/null' EXIT
 ssh-add ${IDENTITY:+"$IDENTITY"}
 
 touch "$LAST_WAN_IP"
@@ -109,6 +111,16 @@ if [[ -z ${MY_IP} ]]; then  # -z == zero-length string
         send_mail "update error" "$DATE ERROR: \$MY_IP is unset or an empty string"
         exit 1
     fi
+fi
+
+# MY_IP goes into SQL and into a command line on the remote host, so accept
+# nothing but a single IPv4 address
+OCTET='(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])'
+if [[ ! ${MY_IP} =~ ^($OCTET\.){3}$OCTET$ ]]; then
+    SHOWN_IP=${MY_IP//[^0-9A-Za-z.:]/?}
+    echo "ERROR: $DNS_RESOLVER returned no single IPv4 address: $SHOWN_IP" | write_log
+    send_mail "update error" "$DATE ERROR: $DNS_RESOLVER returned no single IPv4 address: $SHOWN_IP"
+    exit 1
 fi
 
 

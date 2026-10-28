@@ -102,9 +102,11 @@ The script reads `~/.config/dyndns/config`. To use another file, set `DYNDNS_CON
 1. The script reads the configuration, starts an `ssh-agent` and adds the key from `IDENTITY`.
 2. It checks whether the machine is online (a `wget --spider` request to `google.at`). If not, it waits 30 seconds and goes on anyway.
 3. It asks `DNS_RESOLVER` for the WAN IP and looks up the current A record of `DOMAIN`. If both match the IP in `LAST_WAN_IP`, it stops without further output.
-4. If it got no WAN IP, it tries once more, then logs the error, sends a mail and stops.
+4. If it got no WAN IP, it tries once more, then logs the error, sends a mail and stops. It also stops with an error when the answer is anything but a single IPv4 address, because the address goes into an SQL statement and a command line on the server.
 5. Over SSH, it reads the A record of `DOMAIN` from `DNS_TABLE`. If it gets nothing back (no connection, or no such record), it logs a connection error, sends a mail and stops.
 6. If the record in the database differs from the WAN IP, it updates the record, runs `dnsmng --update` for `DOMAIN` so that Plesk applies it, saves the IP in `LAST_WAN_IP`, logs it and sends a mail. If the database reports no changed row, it logs and mails that error.
+
+However the run ends, the script stops the `ssh-agent` it started.
 
 The exit code is 1 when nothing changed, as well as on errors, so don't use it to detect failures; the log and the mails are the reliable signal.
 

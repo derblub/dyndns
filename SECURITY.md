@@ -16,7 +16,7 @@ dyndns runs on your machine and keeps its state in two files you choose, `LOG_FI
 
 - `google.at`, a `wget --spider` request to see whether the machine is online.
 - The DNS servers in `DNS_RESOLVER` (by default `resolver1.opendns.com`, which answers with your WAN IP) and your normal resolver, which it asks for the current A record of `DOMAIN`.
-- `REMOTEHOST` over SSH, with the key in `IDENTITY`. There it runs `mysql` to read and change the A record in the Plesk database, and `/opt/psa/admin/bin/dnsmng` to apply it.
+- `REMOTEHOST` over SSH, with the key in `IDENTITY`. There it runs `mysql` to read and change the A record in the Plesk database, and `/opt/psa/admin/bin/dnsmng` to apply it. The address from the DNS answer only goes there after the script has checked that it is a single IPv4 address.
 - `SMTPSERVER`, to send the notification mails. The script logs in with `SMTPUSER` and `SMTPPASSWORD` after STARTTLS, but tells `mailx` not to verify the server's certificate (`ssl-verify=ignore`). Use an SMTP account that only sends these mails.
 
 The configuration file holds the SMTP password, so keep it readable for your user only (`chmod 600 ~/.config/dyndns/config`) and outside any repository. From cron, the script needs an SSH key without a passphrase for a user on the Plesk server who can change DNS records. Keep that key on a machine only you use.

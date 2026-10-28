@@ -7,6 +7,7 @@ All notable changes to this project are documented here. The format follows [Kee
 ### Added
 
 - CI checks `dyndns.sh` with `bash -n` and ShellCheck on every push and pull request, and Dependabot keeps the GitHub Actions current.
+- `tests/test.sh` runs the script against stubs for `ssh`, `dig`, `mailx` and the other commands and checks each case, including forged DNS answers. CI runs it too.
 - `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SECURITY.md`, issue and pull request templates.
 
 ### Changed
@@ -20,8 +21,13 @@ All notable changes to this project are documented here. The format follows [Kee
 - `dyndns.sh` passes ShellCheck. Variables are quoted where splitting them was never intended; `DNS_RESOLVER` and `MAILTO` are still split on purpose. The behaviour is unchanged.
 - The README describes the requirements, the setup and what the script does on each run.
 
+### Security
+
+- The WAN IP from the DNS answer has to be a single IPv4 address now. Before, the script put whatever the answer held into the SQL statement and into the command line it runs on the Plesk server over SSH, so a forged DNS answer could have changed other records or run commands there. Anything else is logged and mailed as an error, and nothing is sent to the server.
+
 ### Fixed
 
+- Every run started an `ssh-agent` and left it running, one more process every five minutes from cron. The script now stops its agent however the run ends.
 - `config.example` had wrong values for two settings: `DNS_RESOLVER` has to be a query that returns your WAN IP (`myip.opendns.com @resolver1.opendns.com`), not a name server, and `DNS_TABLE` is `psa.dns_recs` in Plesk. A configuration copied from it would have written the address of the name server into your record. (Wrong since 2026-09-11.)
 
 ## [0.2] - 2015-12-10
