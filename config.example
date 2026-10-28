@@ -1,16 +1,16 @@
-# dyndns configuration – copy to ~/.config/dyndns/config, chmod 600, fill in your values.
+# dyndns configuration: copy to ~/.config/dyndns/config, chmod 600, fill in your values.
 # Override the location with the DYNDNS_CONFIG environment variable.
-DNS_RESOLVER="ns1.example.com"          # resolver used to look up the current DNS record
-DNS_TABLE="dns_records"                 # table holding the A record (MySQL on the remote host)
-REMOTEUSER="user"                       # SSH user on the DNS server
-REMOTEHOST="dns.example.com"            # DNS server (reached via SSH)
-MAILTO="you@example.com"                # notification recipient
+DNS_RESOLVER="myip.opendns.com @resolver1.opendns.com"  # dig query that returns your WAN IP
+DNS_TABLE="psa.dns_recs"                # DNS records table of Plesk (MySQL on the remote host)
+REMOTEUSER="user"                       # SSH user on the Plesk server
+REMOTEHOST="plesk.example.com"          # Plesk server (reached via SSH)
+MAILTO="you@example.com"                # notification recipients, separated by spaces
 SMTPSERVER="smtp.example.com"
 SMTPPORT="587"
 SMTPFROM="dyndns@example.com"
 SMTPUSER="dyndns@example.com"
 SMTPPASSWORD="change-me"                # or: . ~/.config/tools/secrets.env and use "$SMTP_PASSWORD"
 IDENTITY="$HOME/.ssh/id_ed25519"        # SSH key for REMOTEHOST
-DOMAIN="home.example.com"               # record to update
+DOMAIN="home.example.com"               # record to update (created in Plesk)
 LOG_FILE="$HOME/.local/state/dyndns.log"
 LAST_WAN_IP="$HOME/.local/state/dyndns.last-ip"
